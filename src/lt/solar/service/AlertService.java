@@ -9,17 +9,21 @@ import java.util.List;
 @Service
 public class AlertService {
 
-    private final AlertRepository repository;
+    private final AlertRepository alertRepository;
 
-    public AlertService(AlertRepository repository) {
-        this.repository = repository;
+    public AlertService(AlertRepository alertRepository) {
+        this.alertRepository = alertRepository;
     }
 
     public Alert save(Alert alert) {
-        return repository.save(alert);
+        return alertRepository.save(alert);
     }
 
     public List<Alert> getAll() {
-        return repository.findAll();
+        return alertRepository.findAll();
+    }
+
+    public void delete(Long id) {
+        alertRepository.deleteById(id);
     }
 }

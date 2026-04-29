@@ -9,21 +9,35 @@ import java.util.List;
 @Service
 public class SolarParkService {
 
-    private final SolarParkRepository repository;
+    private final SolarParkRepository solarParkRepository;
 
-    public SolarParkService(SolarParkRepository repository) {
-        this.repository = repository;
+    public SolarParkService(SolarParkRepository solarParkRepository) {
+        this.solarParkRepository = solarParkRepository;
     }
 
-    public SolarPark create(SolarPark park) {
-        return repository.save(park);
+    public SolarPark save(SolarPark solarPark) {
+        return solarParkRepository.save(solarPark);
     }
 
     public List<SolarPark> getAll() {
-        return repository.findAll();
+        return solarParkRepository.findAll();
+    }
+
+    public SolarPark getById(Long id) {
+        return solarParkRepository.findById(id).orElseThrow();
+    }
+
+    public SolarPark update(Long id, SolarPark updatedPark) {
+        SolarPark park = solarParkRepository.findById(id).orElseThrow();
+
+        park.setName(updatedPark.getName());
+        park.setLocation(updatedPark.getLocation());
+        park.setCapacity(updatedPark.getCapacity());
+
+        return solarParkRepository.save(park);
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        solarParkRepository.deleteById(id);
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/energy")
+@CrossOrigin(origins = "*")
 public class EnergyReadingController {
 
     private final EnergyReadingService energyReadingService;
@@ -24,5 +25,15 @@ public class EnergyReadingController {
     @GetMapping
     public List<EnergyReading> getAll() {
         return energyReadingService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public EnergyReading getById(@PathVariable Long id) {
+        return energyReadingService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        energyReadingService.delete(id);
     }
 }

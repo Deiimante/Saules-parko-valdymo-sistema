@@ -1,28 +1,34 @@
 package lt.solar.controller;
 
 import lt.solar.entity.Alert;
-import lt.solar.repository.AlertRepository;
+import lt.solar.service.AlertService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/alerts")
+@CrossOrigin(origins = "*")
 public class AlertController {
 
-    private final AlertRepository alertRepository;
+    private final AlertService alertService;
 
-    public AlertController(AlertRepository alertRepository) {
-        this.alertRepository = alertRepository;
-    }
-
-    @GetMapping
-    public List<Alert> getAll() {
-        return alertRepository.findAll();
+    public AlertController(AlertService alertService) {
+        this.alertService = alertService;
     }
 
     @PostMapping
     public Alert create(@RequestBody Alert alert) {
-        return alertRepository.save(alert);
+        return alertService.save(alert);
+    }
+
+    @GetMapping
+    public List<Alert> getAll() {
+        return alertService.getAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        alertService.delete(id);
     }
 }

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Saulės parko valdymo sistema</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: darkgreen;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            background-color: darkgreen;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            text-align: center;
+            background: #dff0d8;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Saulės parko valdymo sistema</h1>
+
+    <div class="stats">
+        <div class="stat-box">
+            <div>Solar Parkai</div>
+            <div id="solarCount">0</div>
+        </div>
+
+        <div class="stat-box">
+            <div>Energy įrašai</div>
+            <div id="energyCount">0</div>
+        </div>
+
+        <div class="stat-box">
+            <div>Alertai</div>
+            <div id="alertCount">0</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Pridėti Solar Parką</h2>
+
+        <input type="text" id="name" placeholder="Pavadinimas">
+        <input type="text" id="location" placeholder="Lokacija">
+        <input type="number" id="capacity" placeholder="Galia">
+
+        <button onclick="addSolarPark()">Pridėti</button>
+    </div>
+
+    <div class="card">
+        <h2>Solar Parkai</h2>
+        <button onclick="loadSolarParks()">Atnaujinti</button>
+        <ul id="solarparks"></ul>
+    </div>
+
+    <div class="card">
+        <h2>Energy Reading</h2>
+        <button onclick="loadEnergy()">Atnaujinti</button>
+        <ul id="energy"></ul>
+    </div>
+
+    <div class="card">
+        <h2>Alertai</h2>
+        <button onclick="loadAlerts()">Atnaujinti</button>
+        <ul id="alerts"></ul>
+    </div>
+
+</div>
+
+<script>
+
+    function addSolarPark() {
+        const name = document.getElementById("name").value;
+        const location = document.getElementById("location").value;
+        const capacity = document.getElementById("capacity").value;
+
+        fetch("http://localhost:8080/solarparks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                location: location,
+                capacity: parseFloat(capacity)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Solar parkas pridėtas!");
+            loadSolarParks();
+        });
+    }
+
+    function loadSolarParks() {
+        fetch("http://localhost:8080/solarparks")
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("solarparks");
+                list.innerHTML = "";
+                document.getElementById("solarCount").textContent = data.length;
+
+                data.forEach(park => {
+                    const li = document.createElement("li");
+                    li.textContent =
+                        park.name + " | " +
+                        park.location + " | Galia: " +
+                        park.capacity;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    function loadEnergy() {
+        fetch("http://localhost:8080/energy")
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("energy");
+                list.innerHTML = "";
+                document.getElementById("energyCount").textContent = data.length;
+
+                data.forEach(reading => {
+                    const li = document.createElement("li");
+                    li.textContent =
+                        "Pagaminta: " + reading.producedPower +
+                        " | Suvartota: " + reading.consumption +
+                        " | Laikas: " + reading.timestamp;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    function loadAlerts() {
+        fetch("http://localhost:8080/alerts")
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("alerts");
+                list.innerHTML = "";
+                document.getElementById("alertCount").textContent = data.length;
+
+                data.forEach(alert => {
+                    const li = document.createElement("li");
+                    li.textContent =
+                        alert.level + " | " + alert.message;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    window.onload = function() {
+        loadSolarParks();
+        loadEnergy();
+        loadAlerts();
+    };
+
+</script>
+
+</body>
+</html>

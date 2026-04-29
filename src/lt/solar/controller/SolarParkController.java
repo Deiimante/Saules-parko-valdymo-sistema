@@ -7,27 +7,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/parks")
+@RequestMapping("/solarparks")
+@CrossOrigin(origins = "*")
 public class SolarParkController {
 
-    private final SolarParkService service;
+    private final SolarParkService solarParkService;
 
-    public SolarParkController(SolarParkService service) {
-        this.service = service;
+    public SolarParkController(SolarParkService solarParkService) {
+        this.solarParkService = solarParkService;
     }
 
     @PostMapping
-    public SolarPark create(@RequestBody SolarPark park) {
-        return service.create(park);
+    public SolarPark create(@RequestBody SolarPark solarPark) {
+        return solarParkService.save(solarPark);
     }
 
     @GetMapping
     public List<SolarPark> getAll() {
-        return service.getAll();
+        return solarParkService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public SolarPark getById(@PathVariable Long id) {
+        return solarParkService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public SolarPark update(@PathVariable Long id, @RequestBody SolarPark solarPark) {
+        return solarParkService.update(id, solarPark);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        solarParkService.delete(id);
     }
 }

@@ -22,8 +22,6 @@ public class EnergyReadingService {
 
     public EnergyReading save(EnergyReading reading) {
 
-        EnergyReading saved = energyReadingRepository.save(reading);
-
         if (reading.getProducedPower() < 10) {
             Alert alert = new Alert();
             alert.setMessage("Per mažai energijos");
@@ -40,10 +38,18 @@ public class EnergyReadingService {
             alertRepository.save(alert);
         }
 
-        return saved;
+        return energyReadingRepository.save(reading);
     }
 
     public List<EnergyReading> getAll() {
         return energyReadingRepository.findAll();
+    }
+
+    public EnergyReading getById(Long id) {
+        return energyReadingRepository.findById(id).orElseThrow();
+    }
+
+    public void delete(Long id) {
+        energyReadingRepository.deleteById(id);
     }
 }
