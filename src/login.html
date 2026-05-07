@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Prisijungimas</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #eef2f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 10px auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: darkgreen;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Prisijungimas</h2>
+
+    <input type="text" id="username" placeholder="Vartotojo vardas">
+    <input type="password" id="password" placeholder="Slaptažodis">
+
+    <button onclick="login()">Prisijungti</button>
+</div>
+
+<script>
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:8080/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        })
+        .then(response => response.text())
+        .then(token => {
+            localStorage.setItem("jwtToken", token);
+            alert("Prisijungta!");
+            window.location.href = "index.html";
+        })
+        .catch(error => {
+            alert("Neteisingi prisijungimo duomenys");
+        });
+    }
+
+</script>
+
+</body>
+</html>

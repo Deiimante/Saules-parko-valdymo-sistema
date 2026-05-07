@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Registracija</title>
+    <style>
+
+        body {
+
+            font-family: Arial;
+
+            background-color: #eef2f3;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            height: 100vh;
+
+        }
+
+        .register-box {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+            text-align: center;
+
+        }
+
+        input {
+
+            display: block;
+
+            width: 250px;
+
+            padding: 10px;
+
+            margin: 10px auto;
+
+        }
+
+        button {
+
+            padding: 10px 20px;
+
+            background: darkgreen;
+
+            color: white;
+
+            border: none;
+
+            cursor: pointer;
+
+        }
+    </style>
+</head>
+<body>
+<div class="register-box">
+    <h2>Registracija</h2>
+    <input type="text" id="username" placeholder="Vartotojo vardas">
+    <input type="email" id="email" placeholder="El. paštas">
+    <input type="password" id="password" placeholder="Slaptažodis">
+    <button onclick="register()">Registruotis</button>
+</div>
+<script>
+
+    function register() {
+
+        const username = document.getElementById("username").value;
+
+        const email = document.getElementById("email").value;
+
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:8080/auth/register", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                username: username,
+
+                email: email,
+
+                password: password
+
+            })
+
+        })
+
+        .then(response => response.text())
+
+        .then(() => {
+
+            alert("Registracija sėkminga!");
+
+            window.location.href = "login.html";
+
+        })
+
+        .catch(() => {
+
+            alert("Registracija nepavyko");
+
+        });
+
+    }
+</script>
+</body>
+</html>

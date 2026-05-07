@@ -76,6 +76,11 @@
             border-radius: 10px;
             font-size: 20px;
         }
+
+        .logout-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +88,10 @@
 <div class="container">
 
     <h1>Saulės parko valdymo sistema</h1>
+
+    <div class="logout-box">
+        <button onclick="logout()">Atsijungti</button>
+    </div>
 
     <div class="stats">
         <div class="stat-box">
@@ -103,12 +112,26 @@
 
     <div class="card">
         <h2>Pridėti Solar Parką</h2>
-
         <input type="text" id="name" placeholder="Pavadinimas">
         <input type="text" id="location" placeholder="Lokacija">
         <input type="number" id="capacity" placeholder="Galia">
-
         <button onclick="addSolarPark()">Pridėti</button>
+    </div>
+
+    <div class="card">
+        <h2>Pridėti Energy Reading</h2>
+        <input type="number" id="producedPower" placeholder="Pagaminta energija">
+        <input type="number" id="consumption" placeholder="Suvartojimas">
+        <input type="number" id="energySolarParkId" placeholder="Solar Park ID">
+        <button onclick="addEnergy()">Pridėti Energy</button>
+    </div>
+
+    <div class="card">
+        <h2>Pridėti Alertą</h2>
+        <input type="text" id="level" placeholder="Lygis (HIGH/LOW)">
+        <input type="text" id="message" placeholder="Pranešimas">
+        <input type="number" id="alertSolarParkId" placeholder="Solar Park ID">
+        <button onclick="addAlert()">Pridėti Alertą</button>
     </div>
 
     <div class="card">
@@ -133,6 +156,16 @@
 
 <script>
 
+    if (!localStorage.getItem("jwtToken")) {
+        window.location.href = "login.html";
+    }
+
+    function logout() {
+        localStorage.removeItem("jwtToken");
+        alert("Atsijungta!");
+        window.location.href = "login.html";
+    }
+
     function addSolarPark() {
         const name = document.getElementById("name").value;
         const location = document.getElementById("location").value;
@@ -150,9 +183,90 @@
             })
         })
         .then(response => response.json())
-        .then(data => {
+        .then(() => {
             alert("Solar parkas pridėtas!");
             loadSolarParks();
+        });
+    }
+
+    function addEnergy() {
+        const producedPower = document.getElementById("producedPower").value;
+        const consumption = document.getElementById("consumption").value;
+        const solarParkId = document.getElementById("energySolarParkId").value;
+
+        fetch("http://localhost:8080/energy", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                producedPower: parseFloat(producedPower),
+                consumption: parseFloat(consumption),
+                timestamp: new Date().toISOString(),
+                solarPark: {
+                    id: parseInt(solarParkId)
+                }
+            })
+        })
+        .then(response => response.json())
+        .then(() => {
+            alert("Energy įrašas pridėtas!");
+            loadEnergy();
+        });
+    }
+
+    function addAlert() {
+        const level = document.getElementById("level").value;
+        const message = document.getElementById("message").value;
+        const solarParkId = document.getElementById("alertSolarParkId").value;
+
+        fetch("http://localhost:8080/alerts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                level: level,
+                message: message,
+                solarPark: {
+                    id: parseInt(solarParkId)
+                }
+            })
+        })
+        .then(response => response.json())
+        .then(() => {
+            alert("Alertas pridėtas!");
+            loadAlerts();
+        });
+    }
+
+    function deleteSolarPark(id) {
+        fetch(`http://localhost:8080/solarparks/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => {
+            alert("Solar parkas ištrintas!");
+            loadSolarParks();
+        });
+    }
+
+    function deleteEnergy(id) {
+        fetch(`http://localhost:8080/energy/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => {
+            alert("Energy įrašas ištrintas!");
+            loadEnergy();
+        });
+    }
+
+    function deleteAlert(id) {
+        fetch(`http://localhost:8080/alerts/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => {
+            alert("Alertas ištrintas!");
+            loadAlerts();
         });
     }
 
@@ -166,10 +280,11 @@
 
                 data.forEach(park => {
                     const li = document.createElement("li");
-                    li.textContent =
+                    li.innerHTML =
                         park.name + " | " +
                         park.location + " | Galia: " +
-                        park.capacity;
+                        park.capacity +
+                        ` <button onclick="deleteSolarPark(${park.id})">Trinti</button>`;
                     list.appendChild(li);
                 });
             });
@@ -185,10 +300,11 @@
 
                 data.forEach(reading => {
                     const li = document.createElement("li");
-                    li.textContent =
+                    li.innerHTML =
                         "Pagaminta: " + reading.producedPower +
                         " | Suvartota: " + reading.consumption +
-                        " | Laikas: " + reading.timestamp;
+                        " | Laikas: " + reading.timestamp +
+                        ` <button onclick="deleteEnergy(${reading.id})">Trinti</button>`;
                     list.appendChild(li);
                 });
             });
@@ -204,8 +320,9 @@
 
                 data.forEach(alert => {
                     const li = document.createElement("li");
-                    li.textContent =
-                        alert.level + " | " + alert.message;
+                    li.innerHTML =
+                        alert.level + " | " + alert.message +
+                        ` <button onclick="deleteAlert(${alert.id})">Trinti</button>`;
                     list.appendChild(li);
                 });
             });
