@@ -27,12 +27,11 @@ public class AlertService {
         alertRepository.deleteById(id);
     }
     public Alert getById(Long id) {
-        return repository.findById(id).orElseThrow();
-    }
+        return alertRepository.findById(id).orElseThrow();    }
 
     public Alert close(Long id) {
-        Alert alert = repository.findById(id).orElseThrow();
+        Alert alert = alertRepository.findById(id).orElseThrow();
         alert.setLevel("CLOSED");
-        return repository.save(alert);
+        return alertRepository.save(alert);
     }
 }

@@ -26,8 +26,8 @@ public class AuthController {
         return userService.login(request);
     }
     @GetMapping("/me")
-    public User me(Authentication authentication) {
-        return userService.findByUsername(authentication.getName());
+    public String me() {
+        return "Prisijungęs vartotojas autentifikuotas";
     }
 
     @PostMapping("/logout")
