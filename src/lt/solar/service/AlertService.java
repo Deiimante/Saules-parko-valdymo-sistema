@@ -26,4 +26,13 @@ public class AlertService {
     public void delete(Long id) {
         alertRepository.deleteById(id);
     }
+    public Alert getById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
+
+    public Alert close(Long id) {
+        Alert alert = repository.findById(id).orElseThrow();
+        alert.setLevel("CLOSED");
+        return repository.save(alert);
+    }
 }

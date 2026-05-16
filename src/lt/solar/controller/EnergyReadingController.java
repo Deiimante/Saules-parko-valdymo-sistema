@@ -36,4 +36,8 @@ public class EnergyReadingController {
     public void delete(@PathVariable Long id) {
         energyReadingService.delete(id);
     }
+    @GetMapping("/monthly")
+    public List<EnergyReading> getMonthly() {
+        return energyReadingService.getAll();
+    }
 }

@@ -31,4 +31,13 @@ public class AlertController {
     public void delete(@PathVariable Long id) {
         alertService.delete(id);
     }
+    @GetMapping("/{id}")
+    public Alert getById(@PathVariable Long id) {
+        return alertService.getById(id);
+    }
+
+    @PutMapping("/{id}/close")
+    public Alert close(@PathVariable Long id) {
+        return alertService.close(id);
+    }
 }

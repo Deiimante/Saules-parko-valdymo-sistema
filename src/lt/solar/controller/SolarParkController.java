@@ -41,4 +41,8 @@ public class SolarParkController {
     public void delete(@PathVariable Long id) {
         solarParkService.delete(id);
     }
+    @GetMapping("/{id}/stats")
+    public String getStats(@PathVariable Long id) {
+        return "Statistika parkui ID: " + id;
+    }
 }

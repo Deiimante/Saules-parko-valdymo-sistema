@@ -2,6 +2,7 @@ package lt.solar.controller;
 
 import lt.solar.entity.User;
 import lt.solar.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import lt.solar.dto.LoginRequest;
 
@@ -23,5 +24,14 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
         return userService.login(request);
+    }
+    @GetMapping("/me")
+    public User me(Authentication authentication) {
+        return userService.findByUsername(authentication.getName());
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        return "Atsijungta";
     }
 }
