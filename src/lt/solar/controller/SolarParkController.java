@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/solarparks")
+@RequestMapping("/parks")
 @CrossOrigin(origins = "*")
 public class SolarParkController {
 
@@ -41,8 +41,14 @@ public class SolarParkController {
     public void delete(@PathVariable Long id) {
         solarParkService.delete(id);
     }
+
     @GetMapping("/{id}/stats")
     public String getStats(@PathVariable Long id) {
-        return "Statistika parkui ID: " + id;
+        SolarPark park = solarParkService.getById(id);
+
+        return "Parkas: " + park.getName() +
+                ", Lokacija: " + park.getLocation() +
+                ", Bendra galia (kW): " + park.getTotalCapacityKW() +
+                ", Statusas: " + park.getStatus();
     }
 }

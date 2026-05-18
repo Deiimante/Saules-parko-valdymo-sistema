@@ -1,30 +1,28 @@
 package lt.solar.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class User {
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String username;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private String password;
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    private String email;
+
+    private String firstName;
+
+    private String lastName;
+
+    private boolean active = true;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Long getId() {
         return id;
@@ -34,28 +32,55 @@ public class User {
         return username;
     }
 
-    public String getEmail() {
-        return email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public Role getRole() {
         return role;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String username;
-    private String email;
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
-

@@ -1,10 +1,9 @@
 package lt.solar.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-public class SolarPanel {
+public class Inverter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,15 +11,13 @@ public class SolarPanel {
 
     private String serialNumber;
 
-    private double capacityW;
+    private String model;
 
     private String manufacturer;
 
-    private String model;
+    private double maxPowerKW;
 
-    private LocalDate installDate;
-
-    private String status; // WORKING / FAULTY / OFFLINE
+    private String status;
 
     @ManyToOne
     private SolarPark park;
@@ -41,12 +38,12 @@ public class SolarPanel {
         this.serialNumber = serialNumber;
     }
 
-    public double getCapacityW() {
-        return capacityW;
+    public String getModel() {
+        return model;
     }
 
-    public void setCapacityW(double capacityW) {
-        this.capacityW = capacityW;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getManufacturer() {
@@ -57,20 +54,12 @@ public class SolarPanel {
         this.manufacturer = manufacturer;
     }
 
-    public String getModel() {
-        return model;
+    public double getMaxPowerKW() {
+        return maxPowerKW;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public LocalDate getInstallDate() {
-        return installDate;
-    }
-
-    public void setInstallDate(LocalDate installDate) {
-        this.installDate = installDate;
+    public void setMaxPowerKW(double maxPowerKW) {
+        this.maxPowerKW = maxPowerKW;
     }
 
     public String getStatus() {

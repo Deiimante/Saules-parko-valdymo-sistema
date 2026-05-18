@@ -1,8 +1,6 @@
 package lt.solar.controller;
 
 import lt.solar.entity.User;
-import lt.solar.service.UserService;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import lt.solar.dto.LoginRequest;
 
@@ -27,7 +25,7 @@ public class AuthController {
     }
     @GetMapping("/me")
     public String me() {
-        return "Prisijungęs vartotojas autentifikuotas";
+        return "Prisijungęs vartotojas aktyvus sistemoje";
     }
 
     @PostMapping("/logout")

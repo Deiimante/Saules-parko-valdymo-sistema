@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/energy")
+@RequestMapping("/panels/{panelId}/readings")
 @CrossOrigin(origins = "*")
 public class EnergyReadingController {
 
@@ -18,12 +18,12 @@ public class EnergyReadingController {
     }
 
     @PostMapping
-    public EnergyReading create(@RequestBody EnergyReading reading) {
+    public EnergyReading create(@PathVariable Long panelId, @RequestBody EnergyReading reading) {
         return energyReadingService.save(reading);
     }
 
     @GetMapping
-    public List<EnergyReading> getAll() {
+    public List<EnergyReading> getAll(@PathVariable Long panelId) {
         return energyReadingService.getAll();
     }
 
@@ -36,8 +36,19 @@ public class EnergyReadingController {
     public void delete(@PathVariable Long id) {
         energyReadingService.delete(id);
     }
-    @GetMapping("/monthly")
-    public List<EnergyReading> getMonthly() {
+
+    @GetMapping("/parks/{parkId}/energy/daily")
+    public List<EnergyReading> getDailyEnergy(@PathVariable Long parkId) {
         return energyReadingService.getAll();
+    }
+
+    @GetMapping("/parks/{parkId}/energy/monthly")
+    public List<EnergyReading> getMonthlyEnergy(@PathVariable Long parkId) {
+        return energyReadingService.getAll();
+    }
+
+    @GetMapping("/parks/{parkId}/energy/summary")
+    public String getEnergySummary(@PathVariable Long parkId) {
+        return "Bendra energijos suvestinė parkui ID: " + parkId;
     }
 }

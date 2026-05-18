@@ -26,4 +26,15 @@ public class SolarPanelService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+    public SolarPanel getById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
+
+    public SolarPanel update(Long id, SolarPanel panel) {
+        SolarPanel existing = repository.findById(id).orElseThrow();
+        existing.setModel(panel.getModel());
+        existing.setPower(panel.getPower());
+        existing.setStatus(panel.getStatus());
+        return repository.save(existing);
+    }
 }
